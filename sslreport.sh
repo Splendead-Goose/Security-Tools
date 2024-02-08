@@ -7,12 +7,14 @@
 
 ### Variables ###
 port=443
+sshport=22
 opensslscan=0
 nmapscan=0
 ctext=""
 weakscan=0
 wtext=""
 logs=0
+sshovr="SSH Port Detected - Running nmap Only"
 hosterr="ERROR: Please Specify Server Or File List"
 filelogerr="ERROR: Using File List Requires Logging Directory"
 scanerr="ERROR: Please Choose A Scan Type"
@@ -41,6 +43,7 @@ Requirements:
 Defaults:
     Port is '443' by default - Override with '-p [port_number]'
     Running a sslscan report with logging will turn off colors
+    Will only run a nmap report when using SSH port $sshport
 
 Examples:
     $0 -s foo.example.bar -oncw
@@ -142,6 +145,16 @@ fi
 if [[ $opensslscan = 0 ]] && [[ $nmapscan = 0 ]] && [[ $weakscan = 0 ]]; then
 	echo "$scanerr"
 	exit 1
+fi
+
+# NMAP Only if SSH Port
+if [[ $port = $sshport ]]; then
+	echo "$sshovr"
+	echo ""
+	opensslscan=0
+	nmapscan=1
+	ctext='--script ssh2-enum-algos'
+	weakscan=0
 fi
 
 ### Do Work ###
