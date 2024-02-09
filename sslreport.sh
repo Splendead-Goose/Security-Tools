@@ -65,7 +65,7 @@ testflags () {
 }
 
 createlog () {
-	logname="$1-$(date '+%Y%m%d-%H%M').txt"
+	logname="$1-$(date '+%Y%m%d-%H%M')-ssl.txt"
 	logfile="$logdir/$logname"
 }
 
@@ -163,10 +163,12 @@ fi
 if [[ -n "${filelist}" ]]; then
 	for server in $(cat ${filelist}); do
 		createlog $server
+		echo "Output: $logfile"
 		runreport $server > $logfile 2>&1
 	done
 elif [[ $logs = 1 ]]; then
 	createlog $host
+	echo "Output: $logfile"
 	runreport $host > $logfile 2>&1
 else
 	runreport $host
